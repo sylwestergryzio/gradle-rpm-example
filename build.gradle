@@ -1,11 +1,11 @@
 plugins {
-    id 'nebula.rpm' version '4.6.0'
     id 'java'
+    id 'nebula.rpm' version '4.6.0'
     id 'com.palantir.git-version' version '0.10.1'
 }
 
 group 'com.techarchnotes'
-version '1.0-SNAPSHOT'
+version '1.0.0-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
@@ -17,7 +17,9 @@ dependencies {
 }
 
 task buildRpm(type: Rpm) {
-    def details = versionDetails()
-    println('Version is:' + details)
-    version details.branchName
+    def details = versionDetails(prefix: 'rc@')
+    version details.lastTag
+    release details.commitDistance + 1 + '.' + details.gitHash
+    arch X86_64
+    os LINUX
 }
